@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografía Educativa Interactiva</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Special+Elite&display=swap"
+        rel="stylesheet">
+
+
+</head>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    :root {
+        --bg-paper: #fffef0;
+        /* Tono cálido de fondo */
+        --blue-header: #f4a261;
+        /* Naranja tropical */
+        --blue-dark: #1e293b;
+        /* Texto y bordes oscuros para contraste */
+        --blue-medium: #e76f51;
+        /* Coral/Rojo para detalles */
+        --blue-light: #ffd166;
+        /* Amarillo festivo */
+        --text-dark: #1e293b;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: var(--bg-paper);
+        background-image:
+            radial-gradient(circle at 1px 1px, rgba(30, 41, 59, 0.06) 1px, transparent 0);
+        background-size: 22px 22px;
+        font-family: 'Special Elite', 'Courier New', monospace;
+        color: var(--text-dark);
+    }
+
+    .container {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 24px 20px 60px;
+    }
+
+    /* HEADER RECOLORIZADO */
+    header {
+        position: relative;
+        background: linear-gradient(135deg, #ffd166, #f4a261);
+        padding: 35px 20px 25px;
+        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+        text-align: center;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 25px rgba(244, 162, 97, 0.4);
+    }
+
+    header::before {
+        content: '';
+        position: absolute;
+        inset: 10px;
+        border: 2px dashed rgba(30, 41, 59, 0.25);
+        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+        pointer-events: none;
+    }
+
+    .tag-title {
+        display: inline-block;
+        font-family: 'Special Elite', monospace;
+        font-size: 0.75rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--blue-dark);
+        background: rgba(255, 254, 240, 0.55);
+        padding: 4px 14px;
+        border-radius: 20px;
+        margin-bottom: 10px;
+    }
+
+    header h1 {
+        margin: 6px 0 0;
+        font-family: 'Caveat', cursive;
+        font-weight: 700;
+        font-size: 3.6rem;
+        line-height: 1;
+        color: var(--blue-dark);
+        text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.4);
+    }
+
+    /* BARRA DE PROGRESO */
+    .tracker-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        background: var(--blue-dark);
+        color: var(--bg-paper);
+        padding: 12px 18px;
+        border-radius: 14px;
+        margin-bottom: 26px;
+        font-family: 'Special Elite', monospace;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+    }
+
+    .reset-btn {
+        font-family: 'Special Elite', monospace;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        background: var(--blue-medium);
+        color: #fff;
+        border: none;
+        padding: 7px 14px;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .reset-btn:hover {
+        background: #c1481f;
+        transform: translateY(-1px);
+    }
+
+    .reset-btn:active {
+        transform: translateY(0);
+    }
+
+    /* LISTA DE ITEMS */
+    .infographic-list {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: stretch;
+        background: #fff;
+        border: 3px solid var(--blue-dark);
+        border-radius: 18px;
+        overflow: hidden;
+        cursor: pointer;
+        box-shadow: 6px 6px 0 rgba(30, 41, 59, 0.85);
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .info-item:hover {
+        transform: translate(-3px, -3px);
+        box-shadow: 9px 9px 0 rgba(30, 41, 59, 0.85);
+    }
+
+    .info-item:active {
+        transform: translate(0, 0);
+        box-shadow: 3px 3px 0 rgba(30, 41, 59, 0.85);
+    }
+
+    .info-item.explored {
+        opacity: 0.72;
+    }
+
+    .info-item.explored .card-box::after {
+        content: '✓ visto';
+        position: absolute;
+        top: 8px;
+        right: 12px;
+        font-family: 'Special Elite', monospace;
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+        color: rgba(255, 255, 255, 0.85);
+        text-transform: uppercase;
+    }
+
+    .item-3.explored .card-box::after {
+        color: rgba(30, 41, 59, 0.6);
+    }
+
+    .image-box {
+        flex: 0 0 96px;
+        max-width: 96px;
+    }
+
+    .image-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        filter: sepia(15%) saturate(115%);
+    }
+
+    .card-box {
+        position: relative;
+        flex: 1;
+        padding: 14px 18px;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .num-badge {
+        font-family: 'Caveat', cursive;
+        font-weight: 700;
+        font-size: 1.5rem;
+        line-height: 1;
+        width: 34px;
+        height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: rgba(0, 0, 0, 0.25);
+        margin-bottom: 2px;
+    }
+
+    .card-title {
+        margin: 0;
+        font-family: 'Caveat', cursive;
+        font-weight: 700;
+        font-size: 1.5rem;
+        letter-spacing: 0.5px;
+    }
+
+    .card-text {
+        margin: 0;
+        font-family: 'Special Elite', monospace;
+        font-size: 0.78rem;
+        line-height: 1.4;
+        opacity: 0.95;
+    }
+
+    /* PALETA CÁLIDA Y LATINOAMERICANA */
+    .item-1 .card-box {
+        background-color: #e76f51;
+        /* Rojo Coral */
+    }
+
+    .item-1 .num-badge {
+        background-color: #9b2226;
+    }
+
+    .item-2 .card-box {
+        background-color: #2a9d8f;
+        /* Verde Turquesa */
+    }
+
+    .item-2 .num-badge {
+        background-color: #1a535c;
+    }
+
+    .item-3 .card-box {
+        background-color: #ffd166;
+        /* Amarillo Sol */
+        color: var(--text-dark);
+    }
+
+    .item-3 .num-badge {
+        background-color: #f4a261;
+        color: var(--text-dark);
+    }
+
+    .item-4 .card-box {
+        background-color: #0077b6;
+        /* Azul Caribe */
+    }
+
+    .item-4 .num-badge {
+        background-color: #023e8a;
+    }
+
+    .item-5 .card-box {
+        background-color: #f4a261;
+        /* Naranja Cálido */
+    }
+
+    .item-5 .num-badge {
+        background-color: #e76f51;
+    }
+
+    .item-6 .card-box {
+        background-color: #52b788;
+        /* Verde Palma */
+    }
+
+    .item-6 .num-badge {
+        background-color: #2d6a4f;
+    }
+
+    /* MODAL */
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(30, 41, 59, 0.72);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        z-index: 100;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .modal-card {
+        position: relative;
+        max-width: 480px;
+        width: 100%;
+        background: var(--bg-paper);
+        border: 3px solid var(--blue-dark);
+        border-radius: 18px;
+        padding: 32px 26px 26px;
+        box-shadow: 8px 8px 0 rgba(30, 41, 59, 0.85);
+        transform: translateY(12px) scale(0.97);
+        transition: transform 0.2s ease;
+    }
+
+    .modal-overlay.active .modal-card {
+        transform: translateY(0) scale(1);
+    }
+
+    .close-modal {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        background: none;
+        border: none;
+        font-size: 1.6rem;
+        line-height: 1;
+        color: var(--blue-dark);
+        cursor: pointer;
+    }
+
+    .close-modal:hover {
+        color: var(--blue-medium);
+    }
+
+    .modal-title {
+        margin: 0 0 12px;
+        font-family: 'Caveat', cursive;
+        font-weight: 700;
+        font-size: 1.9rem;
+        color: var(--blue-medium);
+    }
+
+    .modal-body {
+        margin: 0;
+        font-family: 'Special Elite', monospace;
+        font-size: 0.9rem;
+        line-height: 1.65;
+        color: var(--text-dark);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 480px) {
+        header h1 {
+            font-size: 2.7rem;
+        }
+
+        .image-box {
+            flex: 0 0 76px;
+            max-width: 76px;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+        }
+
+        .card-text {
+            font-size: 0.72rem;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+        .info-item,
+        .modal-card,
+        .modal-overlay,
+        .reset-btn {
+            transition: none;
+        }
+    }
+</style>
+
+<body>
+
+    <div class="container">
+        <header>
+            <span class="tag-title">REFLEXIÓN MUSICAL</span>
+            <h1>LA GOZADERA</h1>
+        </header>
+
+        <div class="tracker-bar">
+            <span class="tracker-text" id="trackerStatus">Explorados: 0 de 6 temas</span>
+            <button class="reset-btn" onclick="resetExplored()">Reiniciar</button>
+        </div>
+
+        <div class="infographic-list">
+
+            <!-- ITEM 01 -->
+            <div class="info-item item-1" onclick="openDetail(1)">
+                <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1733094143973-914628ca87b8?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mzh8fGFtJUMzJUE5cmljYSUyMGRlbCUyMHN1cnxlbnwwfHwwfHx8MA%3D%3D" alt="Unión Latina">
+                </div>
+                <div class="card-box">
+                    <div class="num-badge">01</div>
+                    <h2 class="card-title">UNIÓN LATINA</h2>
+                    <p class="card-text">Llamado a la fraternidad e integración entre los países de América Latina a
+                        través del ritmo.</p>
+                </div>
+            </div>
+
+            <!-- ITEM 02 -->
+            <div class="info-item item-2" onclick="openDetail(2)">
+                <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=300" alt="Ritmo y Cultura">
+                </div>
+                <div class="card-box">
+                    <div class="num-badge">02</div>
+                    <h2 class="card-title">RITMO Y CULTURA</h2>
+                    <p class="card-text">La música caribeña y latina como lenguaje universal de celebración y patrimonio
+                        sociocultural.</p>
+                </div>
+            </div>
+
+            <!-- ITEM 03 -->
+            <div class="info-item item-3" onclick="openDetail(3)">
+                <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?w=300" alt="Diversidad">
+                </div>
+                <div class="card-box">
+                    <div class="num-badge">03</div>
+                    <h2 class="card-title">DIVERSIDAD</h2>
+                    <p class="card-text">Reconocimiento y valoración de las distintas identidades y tradiciones de la
+                        región.</p>
+                </div>
+            </div>
+
+            <!-- ITEM 04 -->
+            <div class="info-item item-4" onclick="openDetail(4)">
+                <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1455390582262-044cdead277a?w=300" alt="Lectura Crítica">
+                </div>
+                <div class="card-box">
+                    <div class="num-badge">04</div>
+                    <h2 class="card-title">LECTURA CRÍTICA</h2>
+                    <p class="card-text">Estrategias de comprensión aplicadas a canciones populares para analizar su
+                        contexto e intención.</p>
+                </div>
+            </div>
+
+            <!-- ITEM 05 -->
+            <div class="info-item item-5" onclick="openDetail(5)">
+                <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=300" alt="Enseñanza">
+                </div>
+                <div class="card-box">
+                    <div class="num-badge">05</div>
+                    <h2 class="card-title">ENSEÑANZA</h2>
+                    <p class="card-text">Reflexión sobre el orgullo de nuestras raíces y cómo el arte afianza la empatía
+                        colectiva.</p>
+                </div>
+            </div>
+
+            <!-- ITEM 06 -->
+            <div class="info-item item-6" onclick="openDetail(6)">
+                <div class="image-box">
+                    <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=300" alt="Aprendizaje">
+                </div>
+                <div class="card-box">
+                    <div class="num-badge">06</div>
+                    <h2 class="card-title">APRENDIZAJE</h2>
+                    <p class="card-text">Incidencia de la lectura crítica en la vida diaria para comprender el entorno
+                        cultural.</p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal-card">
+            <button class="close-modal" onclick="forceCloseModal()">&times;</button>
+            <h3 class="modal-title" id="modalTitle">Título</h3>
+            <p class="modal-body" id="modalBody">Texto desplegado...</p>
+        </div>
+    </div>
+
+</body>
+
+<script>
+    const totalItems = 6;
+    let exploredSet = new Set();
+
+    const extraDetails = {
+        1: {
+            title: "01. UNIÓN Y FRATERNIDAD LATINA",
+            text: "La canción menciona explícitamente a diversos países de América Latina para construir un sentido de pertenencia e integración compartido. A través de la música urbana y el baile, elimina fronteras geográficas y sociales, invitando a la unión a través de la celebración de nuestras raíces comunes."
+        },
+        2: {
+            title: "02. RITMO Y PATRIMONIO CULTURAL",
+            text: "El ritmo caribeño actúa como un lenguaje universal de comunicación. Nos enseña que las manifestaciones musicales populares son vehículos vivos de memoria, resiliencia y riqueza cultural que definen la identidad de los pueblos latinoamericanos frente al mundo."
+        },
+        3: {
+            title: "03. DIVERSIDAD EN LA PLURALIDAD",
+            text: "Aunque todos los países se unen bajo una misma fiesta o 'gozadera', se respeta y destaca la particularidad de cada nación. Reconocer esta pluralidad ayuda a cultivar una lectura crítica y respetuosa sobre cómo nos percibimos entre culturas hermanas."
+        },
+        4: {
+            title: "04. APLICACIÓN DE LA LECTURA CRÍTICA",
+            text: "Analizar una canción urbana exige decodificar metáforas, identificar ideas principales y reflexionar sobre la intención del autor. Aplicar estrategias de comprensión lectora a la música cotidiana fortalece la capacidad de interpretación crítica en cualquier ámbito diario."
+        },
+        5: {
+            title: "05. REFLEXIÓN Y ENSEÑANZA PRINCIPAL",
+            text: "'La Gozadera' enseña que la música y la cultura actúan como puentes de integración, recordando la importancia de mantener viva la identidad latinoamericana con orgullo. La canción invita a valorar la diversidad regional mientras se fomenta la empatía y el sentido de pertenencia colectivo."
+        },
+        6: {
+            title: "06. APRENDIZAJE EN LA VIDA COTIDIANA",
+            text: "La comprensión lectora trasciende las aulas y los textos académicos. Aprender a 'leer' e interpretar el entorno, el arte y las expresiones musicales cotidianas nos convierte en ciudadanos más analíticos, reflexivos y conscientes de nuestra realidad social."
+        }
+    };
+
+    function openDetail(itemNumber) {
+        exploredSet.add(itemNumber);
+        document.querySelectorAll('.info-item')[itemNumber - 1].classList.add('explored');
+        updateTracker();
+
+        const data = extraDetails[itemNumber];
+        document.getElementById('modalTitle').innerText = data.title;
+        document.getElementById('modalBody').innerText = data.text;
+        document.getElementById('modalOverlay').classList.add('active');
+    }
+
+    function closeModal(event) {
+        if (event.target.id === 'modalOverlay') {
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+    }
+
+    function forceCloseModal() {
+        document.getElementById('modalOverlay').classList.remove('active');
+    }
+
+    function updateTracker() {
+        document.getElementById('trackerStatus').innerText = `Explorados: ${exploredSet.size} de ${totalItems} temas`;
+    }
+
+    function resetExplored() {
+        exploredSet.clear();
+        document.querySelectorAll('.info-item').forEach(el => el.classList.remove('explored'));
+        updateTracker();
+    }
+</script>
+</html>
